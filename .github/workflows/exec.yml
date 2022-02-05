@@ -6,7 +6,7 @@ on:
         - 'master'
 
 jobs:
-  exec_code:
+  execcode:
     runs-on: ubuntu-latest
     name: Exec-Code-Job
 
