@@ -24,6 +24,19 @@ jobs:
           code: ${{ steps.vars.outputs.code }}
           langVersion: ${{ steps.vars.outputs.langVersion }}
       
+      - name: Commit files from results of the github action
+        run: |
+          # We copy contents from step execution inside current files
+          echo ${{ steps.execution.outputs.STDOUT }} > ${GITHUB_WORKSPACE}/stdout
+          echo ${{ steps.execution.outputs.STDERR }} > ${GITHUB_WORKSPACE}/stderr
+          echo ${{ steps.execution.outputs.OUTPUT }} > ${GITHUB_WORKSPACE}/output
+          echo ${{ steps.execution.outputs.SIGNAL }} > ${GITHUB_WORKSPACE}/signal
+
+          # then we commit it
+          git config --local user.name "d-exe"
+          git add .
+          git commit -m "exec: code executed."
+
       - name: Push changes to the repo
         uses: ad-m/github-push-action@master
         with:
