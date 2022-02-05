@@ -1,0 +1,25 @@
+name: Exec code
+
+on:
+  push:
+    branches:
+        - 'master'
+
+jobs:
+  exec_code:
+    runs-on: ubuntu-latest
+    name: Exec-Code-Job
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: get parameters
+        id: vars
+        run: |
+            echo ::set-output name=code::$(cat ${GITHUB_WORKSPACE}/code)
+            echo ::set-output name=langVersion::$(cat ${GITHUB_WORKSPACE}/langVersion)
+      - id: execution
+        uses: sanix-darker/d-exe-action@master
+        with:
+          code: ${{ steps.vars.outputs.code }}
+          langVersion: ${{ steps.vars.outputs.langVersion }}
+
