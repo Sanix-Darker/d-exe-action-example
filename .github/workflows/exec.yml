@@ -17,14 +17,16 @@ jobs:
         run: |
             echo ::set-output name=code::$(cat ${GITHUB_WORKSPACE}/code)
             echo ::set-output name=langVersion::$(cat ${GITHUB_WORKSPACE}/langVersion)
+      
       - id: execution
         uses: sanix-darker/d-exe-action@master
         with:
           code: ${{ steps.vars.outputs.code }}
           langVersion: ${{ steps.vars.outputs.langVersion }}
-    - name: Push changes to the repo
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GH_TOKEN }}
-        force: true
+      
+      - name: Push changes to the repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          force: true
 
