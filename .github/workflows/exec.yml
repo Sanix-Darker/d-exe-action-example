@@ -22,4 +22,9 @@ jobs:
         with:
           code: ${{ steps.vars.outputs.code }}
           langVersion: ${{ steps.vars.outputs.langVersion }}
+    - name: Push changes to the repo
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}
+        force: true
 
