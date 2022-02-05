@@ -33,7 +33,8 @@ jobs:
           echo ${{ steps.execution.outputs.SIGNAL }} > ${GITHUB_WORKSPACE}/signal
 
           # then we commit it
-          git config --local user.name "d-exe"
+          git config --local user.name "dexe"
+          git config --local user.email "dexe@github.com"
           git add .
           git commit -m "exec: code executed."
 
