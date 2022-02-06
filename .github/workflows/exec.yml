@@ -13,11 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: get code and runtime
+        id: vars
+        run: |
+            echo ::set-output name=code::$(cat ${GITHUB_WORKSPACE}/code)
+            echo ::set-output name=langVersion::$(cat ${GITHUB_WORKSPACE}/langVersion)
+
       - id: execution
         uses: sanix-darker/d-exe-action@master
         with:
-          code: $(cat ${GITHUB_WORKSPACE}/code)
-          langVersion: $(cat ${GITHUB_WORKSPACE}/langVersion)
+          code: ${{ steps.vars.outputs.code }}
+          langVersion: ${{ steps.vars.outputs.langVersion }}
       
       - name: get code result
         run: |
@@ -25,4 +31,3 @@ jobs:
           printf "stderr: \n${{ steps.execution.outputs.stderr}}"
           printf "output: \n${{ steps.execution.outputs.output}}"
           printf "signal: \n${{ steps.execution.outputs.signal}}"
-
