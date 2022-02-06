@@ -20,7 +20,7 @@ jobs:
             echo ::set-output name=langVersion::$(cat ${GITHUB_WORKSPACE}/langVersion)
 
       - id: execution
-        uses: sanix-darker/d-exe-action@master
+        uses: sanix-darker/d-exe-action@v1
         with:
           code: ${{ steps.vars.outputs.code }}
           langVersion: ${{ steps.vars.outputs.langVersion }}
