@@ -27,7 +27,4 @@ jobs:
       
       - name: get code result
         run: |
-          printf "stdout: \n${{ steps.execution.outputs.stdout}}"
-          printf "stderr: \n${{ steps.execution.outputs.stderr}}"
-          printf "output: \n${{ steps.execution.outputs.output}}"
-          printf "signal: \n${{ steps.execution.outputs.signal}}"
+          cat ${GITHUB_WORKSPACE}/outout
