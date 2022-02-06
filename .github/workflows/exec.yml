@@ -6,41 +6,23 @@ on:
         - 'master'
 
 jobs:
-  execcode:
+  exec_code:
     runs-on: ubuntu-latest
     name: Exec-Code-Job
 
     steps:
       - uses: actions/checkout@v2
-      - name: get parameters
-        id: vars
-        run: |
-            echo ::set-output name=code::$(cat ${GITHUB_WORKSPACE}/code)
-            echo ::set-output name=langVersion::$(cat ${GITHUB_WORKSPACE}/langVersion)
-      
+
       - id: execution
-        uses: sanix-darker/d-exe-action@v1
+        uses: sanix-darker/d-exe-action@master
         with:
-          code: ${{ steps.vars.outputs.code }}
-          langVersion: ${{ steps.vars.outputs.langVersion }}
+          code: $(cat ${GITHUB_WORKSPACE}/code)
+          langVersion: $(cat ${GITHUB_WORKSPACE}/langVersion)
       
-      - name: Commit files from results of the github action
+      - name: get code result
         run: |
-          # We copy contents from step execution inside current files
-          echo ${{ steps.execution.outputs.STDOUT }} > ${GITHUB_WORKSPACE}/stdout
-          echo ${{ steps.execution.outputs.STDERR }} > ${GITHUB_WORKSPACE}/stderr
-          echo ${{ steps.execution.outputs.OUTPUT }} > ${GITHUB_WORKSPACE}/output
-          echo ${{ steps.execution.outputs.SIGNAL }} > ${GITHUB_WORKSPACE}/signal
-
-          # then we commit it
-          git config --local user.name "dexe"
-          git config --local user.email "dexe@github.com"
-          git add ${GITHUB_WORKSPACE}/stdout ${GITHUB_WORKSPACE}/stderr ${GITHUB_WORKSPACE}/output ${GITHUB_WORKSPACE}/signal
-          git commit -m "exec: code executed."
-
-      - name: Push changes to the repo
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          force: true
+          printf "stdout: \n${{ steps.execution.outputs.stdout}}"
+          printf "stderr: \n${{ steps.execution.outputs.stderr}}"
+          printf "output: \n${{ steps.execution.outputs.output}}"
+          printf "signal: \n${{ steps.execution.outputs.signal}}"
 
