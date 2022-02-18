@@ -21,7 +21,7 @@ jobs:
                 lang=${langVersion[0]}
                 version=${langVersion[1]}
 
-                code=$(cat ./code)
+                code=$(awk -v ORS='\\n' '1' ./code)
 
                 echo "===---===---==="
                 echo $code
