@@ -16,7 +16,7 @@ jobs:
             - name: get code and runtime
               id: vars
               run: |
-                lv="python=3.9.4"
+                lv="$(cat ./langVersion)"
                 langVersion=(${lv//=/ })
                 lang=${langVersion[0]}
                 version=${langVersion[1]}
