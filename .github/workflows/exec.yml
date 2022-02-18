@@ -40,9 +40,10 @@ jobs:
                 jq -r '[.out, .err] | @tsv' | \
                 while IFS=$'\t' read -r out err; do
                     echo "-------"
-                    echo $out
-                    echo $err
+                    echo $out > ./out
+                    echo $err > ./err
                     echo "-------"
+                    cat ./out
                     # echo ::set-output name=SIGNAL::$(echo $signal)
                 done
               shell: bash
