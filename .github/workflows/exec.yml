@@ -7,12 +7,8 @@ on:
 
 jobs:
     exec_code:
-        defaults:
-          run:
-            working-directory: ./
-
         runs-on: ubuntu-latest
-        name: Exec-Code-Job
+        name: exec-code
 
         steps:
             - uses: actions/checkout@v2
@@ -40,19 +36,19 @@ jobs:
                 jq '. | {out: .run.stdout, err: .run.stderr}' | \
                 jq -r '[.out, .err] | @tsv' | \
                 while IFS=$'\t' read -r out err; do
-                    echo $out > ./out
-                    echo $err > ./err
-                    cat ./err
-                    cat ./out
+                    echo "-------"
                     echo $out
+                    echo $err
+                    echo "-------"
                     # echo ::set-output name=SIGNAL::$(echo $signal)
                 done
+              shell: bash
 
             - name: Commit files
               run: |
                 git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
                 git config --local user.name "github-actions[bot]"
-                git commit -m "exc: code executed" -a
+                git commit -m "exe: code executed" -a
 
             - name: Push changes
               uses: ad-m/github-push-action@master
