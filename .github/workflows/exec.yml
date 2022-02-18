@@ -44,6 +44,7 @@ jobs:
                     echo $err > ./err
                     cat ./err
                     cat ./out
+                    echo $out
                     # echo ::set-output name=SIGNAL::$(echo $signal)
                 done
 
