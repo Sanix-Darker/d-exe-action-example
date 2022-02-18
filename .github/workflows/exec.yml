@@ -6,25 +6,49 @@ on:
         - 'master'
 
 jobs:
-  exec_code:
-    runs-on: ubuntu-latest
-    name: Exec-Code-Job
+    exec_code:
+        runs-on: ubuntu-latest
+        name: Exec-Code-Job
 
-    steps:
-      - uses: actions/checkout@v2
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                persist-credentials: false
+                fetch-depth: 0
 
-      - name: get code and runtime
-        id: vars
-        run: |
-            echo ::set-output name=code::$(cat ${GITHUB_WORKSPACE}/code)
-            echo ::set-output name=langVersion::$(cat ${GITHUB_WORKSPACE}/langVersion)
+            - name: get code and runtime
+              id: vars
+              run: |
+                lv="python=3.9.4"
+                langVersion=(${lv//=/ })
+                lang=${langVersion[0]}
+                version=${langVersion[1]}
 
-      - id: execution
-        uses: sanix-darker/d-exe-action@v1
-        with:
-          code: ${{ steps.vars.outputs.code }}
-          langVersion: ${{ steps.vars.outputs.langVersion }}
-      
-      - name: get code result
-        run: |
-          cat ${GITHUB_WORKSPACE}/outout
+                curl -s -L -X POST "http://147.182.205.116:4321/api/v1/execute" \
+                -H "Content-Type: application/json" \
+                -d '{
+                    "name": "test",
+                    "lang": "'$lang'",
+                    "version": "'$version'",
+                    "code": "'$(cat ${GITHUB_WORKSPACE}/code)'"
+                    "stdin": ""
+                }' | \
+                jq '. | {out: .run.stdout, err: .run.stderr}' | \
+                jq -r '[.out, .err] | @tsv' | \
+                while IFS=$'\t' read -r out err; do
+                    echo $out > ${GITHUB_WORKSPACE}/out
+                    echo $err > ${GITHUB_WORKSPACE}/err
+                    # echo ::set-output name=SIGNAL::$(echo $signal)
+                done
+
+            - name: Commit files
+              run: |
+                git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                git config --local user.name "github-actions[bot]"
+                git commit -m "exc: code executed" -a
+
+            - name: Push changes
+              uses: ad-m/github-push-action@master
+              with:
+                github_token: ${{ secrets.GH_TOKEN }}
+                branch: ${{ github.ref }}
