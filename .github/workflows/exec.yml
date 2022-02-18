@@ -12,9 +12,6 @@ jobs:
 
         steps:
             - uses: actions/checkout@v2
-              with:
-                persist-credentials: false
-                fetch-depth: 0
 
             - name: get code and runtime
               id: vars
