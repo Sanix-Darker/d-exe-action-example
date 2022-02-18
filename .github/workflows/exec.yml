@@ -24,13 +24,19 @@ jobs:
                 lang=${langVersion[0]}
                 version=${langVersion[1]}
 
+                code=$(cat ./code)
+
+                echo "===---===---==="
+                echo $code
+                echo "===---===---==="
+
                 curl -s -L -X POST "http://147.182.205.116:4321/api/v1/execute" \
                 -H "Content-Type: application/json" \
                 -d '{
                     "name": "test",
                     "lang": "'$lang'",
                     "version": "'$version'",
-                    "code": "'$(cat ./code)'"
+                    "code": "'$code'"
                     "stdin": ""
                 }' | \
                 jq '. | {out: .run.stdout, err: .run.stderr}' | \
