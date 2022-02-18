@@ -39,11 +39,8 @@ jobs:
                 jq '. | {out: .run.stdout, err: .run.stderr}' | \
                 jq -r '[.out, .err] | @tsv' | \
                 while IFS=$'\t' read -r out err; do
-                    echo "-------"
                     echo $out > ./out
                     echo $err > ./err
-                    echo "-------"
-                    cat ./out
                     # echo ::set-output name=SIGNAL::$(echo $signal)
                 done
               shell: bash
@@ -52,6 +49,7 @@ jobs:
               run: |
                 git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
                 git config --local user.name "github-actions[bot]"
+                git add -A
                 git commit -m "exe: code executed" -a
 
             - name: Push changes
