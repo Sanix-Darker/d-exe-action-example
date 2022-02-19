@@ -11,6 +11,16 @@ jobs:
     name: Exec-Code-Job
 
     steps:
-      - uses: actions/checkout@v2
-      - name: code execution
-        uses: sanix-darker/d-exe-action@v1
+        - uses: actions/checkout@v2
+
+        - name: code & runtime
+          run: ./exec.sh
+
+        - name: commit changes
+          run: ./commit.sh
+
+        - name: push updates
+          uses: ad-m/github-push-action@master
+          with:
+            github_token: ${{ secrets.GH_TOKEN }}
+            branch: ${{ github.ref }}
